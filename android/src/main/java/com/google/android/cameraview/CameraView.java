@@ -549,8 +549,8 @@ public class CameraView extends FrameLayout {
      * @param profile Quality profile of the recording.
      */
     public boolean record(String path, int maxDuration, int maxFileSize,
-                          boolean recordAudio, CamcorderProfile profile, int orientation) {
-        return mImpl.record(path, maxDuration, maxFileSize, recordAudio, profile, orientation);
+                          boolean recordAudio, CamcorderProfile profile, int orientation,ReadableMap videoResolution) {
+        return mImpl.record(path, maxDuration, maxFileSize, recordAudio, profile, orientation, videoResolution);
     }
 
     public void stopRecording() {
