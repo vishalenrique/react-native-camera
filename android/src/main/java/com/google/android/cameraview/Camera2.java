@@ -1395,7 +1395,7 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
         if(videoResolution!=null && videoResolution.hasKey("videoFrameWidth") && videoResolution.hasKey("videoFrameHeight")){
             int videoFrameWidth = videoResolution.getInt("videoFrameWidth");
             int videoFrameHeight = videoResolution.getInt("videoFrameHeight");
-            if(videoFrameWidth > 0 && videoFrameHeight > 0) {
+            if(videoFrameWidth > 0 && videoFrameHeight > 0 && mPictureSizes.sizes(mAspectRatio).contains(new Size(videoFrameWidth, videoFrameHeight))) {
                 mMediaRecorder.setVideoSize(videoFrameWidth, videoFrameHeight);
             } else {
                 mMediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
