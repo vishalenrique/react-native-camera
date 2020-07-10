@@ -159,7 +159,7 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
 
     @Override
     void stop() {
-        if (mCamera != null) {
+        /*if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.setPreviewCallback(null);
         }
@@ -175,7 +175,48 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
                 mIsRecording = false;
             }
         }
-        releaseCamera();
+        releaseCamera();*/
+        synchronized(this){
+            if (mMediaRecorder != null) {
+                try{
+                    mMediaRecorder.stop();
+                }
+                catch(RuntimeException e){
+                    Log.e("CAMERA_1::", "mMediaRecorder.stop() failed", e);
+                }
+
+                try{
+                    mMediaRecorder.reset();
+                    mMediaRecorder.release();
+                }
+                catch(RuntimeException e){
+                    Log.e("CAMERA_1::", "mMediaRecorder.release() failed", e);
+                }
+
+                mMediaRecorder = null;
+
+                if (mIsRecording) {
+                    // mCallback.onRecordingEnd();
+
+                    int deviceOrientation = displayOrientationToOrientationEnum(mDeviceOrientation);
+                    mCallback.onVideoRecorded(mVideoPath, mOrientation != Constants.ORIENTATION_AUTO ? mOrientation : deviceOrientation, deviceOrientation);
+                     mIsRecording = false;
+                }
+            }
+
+            if (mCamera != null) {
+                mIsPreviewActive = false;
+                try{
+                    mCamera.stopPreview();
+                    mCamera.setPreviewCallback(null);
+                }
+                catch(Exception e){
+                    Log.e("CAMERA_1::", "stop preview cleanup failed", e);
+                }
+            }
+
+            releaseCamera();
+        }
     }
 
     // Suppresses Camera#setPreviewTexture
